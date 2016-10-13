@@ -47,11 +47,16 @@
 		},			
 		//滚动条滚动,distance 距离
 		_scroll:function(distance){			
+			var ch = this.container.height();
+			if(ch !== clientHeight){
+				//解决由于js影响了body高度,而滚动条监测不到的bug
+				this._init();
+			}		
 			var marginTop=parseInt(this.scrollbar.css('margin-top'))||0;
-			var scrollTop = Math.ceil((marginTop+distance)/height*clientHeight);
+			var scrollTop = Math.ceil((marginTop+distance)/height*ch);
 			if(marginTop+distance+scrollbarHeight >= height){
 				distance = height - marginTop-scrollbarHeight;
-				scrollTop = clientHeight - height;
+				scrollTop = ch - height;
 			}
 			if(marginTop + distance <= 0){
 				distance = -marginTop;
@@ -65,7 +70,7 @@
 				html.scrollTop(scrollTop);
 			}
 			//可以在外部绑定滚动后事件,传入scrollTop
-			$(this).trigger('after.scroll',scrollTop);	
+			$(this).trigger('after.scroll',scrollTop);		
 		},
 		_mousedown:function(e){
 			this.drag = !0;
